@@ -64,6 +64,7 @@ class CustomState(State):
 
 class Dialog:
 
+    current_bot_message = ''
     accept_message = 'Спасибо за заказ'
     cancel_message = 'Заказ отменен'
     states = [
@@ -137,13 +138,14 @@ class Dialog:
             ]
         )
 
-    def __call__(self, client_text: str) -> None:
+    def __call__(self, client_text: str) -> str:
         self.last_call = datetime.now()
+        self.current_bot_message = ''
         client_text = re.sub('[^а-я0-9\s]', '', client_text.lower())
 
         if self.state != 'sleep' and client_text in ('cancel',):
             self.cancel_order()
-            return
+            return self.current_bot_message
 
         try:
             if self.state == 'sleep':
@@ -167,6 +169,8 @@ class Dialog:
         except UnsupportedValue as e:
             self.send_message(text=e.hint)
 
+        return self.current_bot_message
+
     def _accept_order(self) -> None:
         self.send_message(text=self.accept_message)
 
@@ -184,6 +188,7 @@ class Dialog:
         )
 
     def send_message(self, *args, **kwargs) -> None:
+        self.current_bot_message = kwargs.get('text', '')
         kwargs['chat_id'] = self.chat_id
         res = self.messenger(*args, **kwargs)
         if not res.ok and self.state != 'sleep':
@@ -309,9 +314,9 @@ async def telegram_webhook(data: TelegramHook, background_tasks: BackgroundTasks
             chat_id
         )
 
-    dialog(data.message.text)
+    bot_text = dialog(data.message.text)
 
-    return {}
+    return {'bot_text', bot_text}
 
 
 if __name__ == '__main__':
