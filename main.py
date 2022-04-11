@@ -140,6 +140,10 @@ class Dialog:
         )
 
     def __call__(self, client_text: str) -> str:
+        print(self.state)
+        print(self.payment_type)
+        print(self.size)
+        print(self.confirm)
         self.last_call = datetime.now()
         self.current_bot_message = ''
         client_text = re.sub('[^а-я0-9\s]', '', client_text.lower())
