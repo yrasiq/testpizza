@@ -316,7 +316,7 @@ async def telegram_webhook(data: TelegramHook, background_tasks: BackgroundTasks
 
     bot_text = dialog(data.message.text)
 
-    return {'bot_text', bot_text}
+    return {'bot_text': bot_text}
 
 
 if __name__ == '__main__':
