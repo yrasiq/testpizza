@@ -10,5 +10,6 @@ client = TestClient(app)
 class TestMain(unittest.TestCase):
 
     @mock.patch('main.telegram_messenger')
-    def test(self, mock_tg_messenger) -> None:
+    def test_all(self, mock_tg_messenger) -> None:
         mock_tg_messenger.return_value = None
+        assert True
