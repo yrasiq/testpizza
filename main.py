@@ -41,9 +41,11 @@ class CustomState(State):
         text: str,
         hint: str,
         possible_vals: list,
+        vars={},
         *args,
         **kwargs
     ) -> None:
+        self.vars = vars
         self.text = text
         self.hint = hint
         self.possible_vals = possible_vals
@@ -166,17 +168,20 @@ class Dialog:
             self.send_message(text=e.hint)
 
     def _accept_order(self) -> None:
-        self.send_message(text='Thank you for order')
+        self.send_message(text=self.accept_message)
 
     def _cancel_order(self) -> None:
-        self.send_message(text='Order cancelled')
+        self.send_message(text=self.cancel_message)
 
     def _ask(self) -> None:
         self.send_message(text=self.machine.get_state(self.state).text)
 
     def set_confirm_text(self) -> None:
         state = self.machine.get_state('confirm')
-        state.text = state.text.format(self.size, self.payment_type)
+        state.text = state.text.format(
+            state.vars.get(self.size),
+            state.vars.get(self.payment_type)
+        )
 
     def send_message(self, *args, **kwargs) -> None:
         kwargs['chat_id'] = self.chat_id
