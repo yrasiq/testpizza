@@ -183,11 +183,11 @@ class Dialog:
 
     def set_confirm_text(self) -> None:
         state = self.machine.get_state('confirm')
+        print(self.size, self.payment_type)
         state.text = state.text.format(
             state.vars.get(self.size),
             state.vars.get(self.payment_type)
         )
-        print(state.text)
 
     def send_message(self, *args, **kwargs) -> None:
         self.current_bot_message = kwargs.get('text', '')
