@@ -34,7 +34,7 @@ class TestMain(unittest.TestCase):
     @mock.patch('main.BackgroundTasks.add_task')
     @mock.patch('main.telegram_messenger')
     def test_telegram(self, mock_tg_messenger, mock_add_task) -> None:
-        mock_tg_messenger.return_value = self.test_response
+        mock_tg_messenger.return_value = self.test_response()
         mock_add_task.return_value = None
 
         resp = client.post(
@@ -43,5 +43,5 @@ class TestMain(unittest.TestCase):
         )
         self.assertEqual(
             resp,
-            {'bot_text', 'Какую вы хотите пиццу?  Большую или маленькую?'}
+            {'bot_text': 'Какую вы хотите пиццу?  Большую или маленькую?'}
         )
