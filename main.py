@@ -42,12 +42,14 @@ class CustomState(State):
         hint: str,
         possible_vals: list,
         vars={},
+        template_text='',
         *args,
         **kwargs
     ) -> None:
         self.vars = vars
         self.text = text
         self.hint = hint
+        self.template_text = template_text
         self.possible_vals = possible_vals
         super().__init__(*args, **kwargs)
 
@@ -183,8 +185,7 @@ class Dialog:
 
     def set_confirm_text(self) -> None:
         state = self.machine.get_state('confirm')
-        print(self.size, self.payment_type)
-        state.text = state.text.format(
+        state.text = state.text_template.format(
             state.vars.get(self.size),
             state.vars.get(self.payment_type)
         )
