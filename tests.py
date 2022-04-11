@@ -42,6 +42,6 @@ class TestMain(unittest.TestCase):
             json=self.request_data_example
         )
         self.assertEqual(
-            resp,
+            resp.json(),
             {'bot_text': 'Какую вы хотите пиццу?  Большую или маленькую?'}
         )
