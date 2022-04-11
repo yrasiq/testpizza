@@ -31,9 +31,11 @@ class TestMain(unittest.TestCase):
     }
     test_response = type('TestResponse', (object,), {'ok': True})
 
+    @mock.patch('main.telegram_webhook.background_tasks.add_task')
     @mock.patch('main.telegram_messenger')
-    def test_telegram(self, mock_tg_messenger) -> None:
+    def test_telegram(self, mock_tg_messenger, mock_add_task) -> None:
         mock_tg_messenger.return_value = self.test_response
+        mock_add_task.return_value = None
 
         resp = client.post(
             f'/{cfg["TELEGRAM"]["BOT_TOKEN"]}/',
