@@ -1,7 +1,7 @@
 {
     "name": "payment_type",
     "text": "Как вы будете платить?",
-    "hint": "Наличные или карта",
+    "hint": "Наличные или карта?",
     "possible_vals": [
         {
             "value": "cash",
