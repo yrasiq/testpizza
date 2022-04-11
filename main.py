@@ -176,7 +176,7 @@ class Dialog:
 
     def set_confirm_text(self) -> None:
         state = self.machine.get_state('confirm')
-        state.text % (self.size, self.payment_type)
+        state.text = state.text.format(self.size, self.payment_type)
 
     def send_message(self, *args, **kwargs) -> None:
         kwargs['chat_id'] = self.chat_id
