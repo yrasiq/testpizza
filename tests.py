@@ -9,27 +9,29 @@ client = TestClient(app)
 
 class TestMain(unittest.TestCase):
 
-    request_data_example = {
-        'update_id': 778806239,
-        'message': {
-            'message_id': 527,
-            'from': {
-                'id': 450566440,
-                'is_bot': False,
-                'first_name': 'Юрий',
-                'last_name': 'Андреевич',
-                'language_code': 'ru'
-            },
-            'chat': {
-                'id': 450566440,
-                'first_name': 'Юрий',
-                'last_name': 'Андреевич',
-                'type': 'private'
-            }, 'date': 1649671682,
-            'text': 'проверка проверка'
+
+    def setUp(self) -> None:
+        self.request_data_example = {
+            'update_id': 778806239,
+            'message': {
+                'message_id': 527,
+                'from': {
+                    'id': 450566440,
+                    'is_bot': False,
+                    'first_name': 'Юрий',
+                    'last_name': 'Андреевич',
+                    'language_code': 'ru'
+                },
+                'chat': {
+                    'id': 450566440,
+                    'first_name': 'Юрий',
+                    'last_name': 'Андреевич',
+                    'type': 'private'
+                }, 'date': 1649671682,
+                'text': 'проверка проверка'
+            }
         }
-    }
-    test_response = type('TestResponse', (object,), {'ok': True})
+        self.test_response = type('TestResponse', (object,), {'ok': True})
 
     @mock.patch('main.BackgroundTasks.add_task')
     @mock.patch('main.telegram_messenger')
@@ -44,4 +46,14 @@ class TestMain(unittest.TestCase):
         self.assertEqual(
             resp.json(),
             {'bot_text': 'Какую вы хотите пиццу?  Большую или маленькую?'}
+        )
+
+        self.request_data_example['message']['text'] = 'asdasfa/12312 - абвыв'
+        resp = client.post(
+            f'/{cfg["TELEGRAM"]["BOT_TOKEN"]}/',
+            json=self.request_data_example
+        )
+        self.assertEqual(
+            resp.json(),
+            {'bot_text': 'Большую или маленькую?'}
         )
