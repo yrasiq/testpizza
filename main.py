@@ -67,6 +67,7 @@ class Dialog:
     current_bot_message = ''
     accept_message = 'Спасибо за заказ'
     cancel_message = 'Заказ отменен'
+    cancel_phrases = ['отмена',]
     states = [
         State(name='sleep'),
         CustomState(**json.loads(read('states/size.json'))),
@@ -143,7 +144,7 @@ class Dialog:
         self.current_bot_message = ''
         client_text = re.sub('[^а-я0-9\s]', '', client_text.lower())
 
-        if self.state != 'sleep' and client_text in ('cancel',):
+        if self.state != 'sleep' and client_text in self.cancel_phrases:
             self.cancel_order()
             return self.current_bot_message
 
