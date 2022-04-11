@@ -185,7 +185,7 @@ class Dialog:
 
     def set_confirm_text(self) -> None:
         state = self.machine.get_state('confirm')
-        state.text = state.text_template.format(
+        state.text = state.template_text.format(
             state.vars.get(self.size),
             state.vars.get(self.payment_type)
         )
