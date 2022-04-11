@@ -63,4 +63,4 @@ class TestMain(unittest.TestCase):
             {'req': 'отмена', 'res': 'Заказ отменен'},
         ]
 
-        await self.iterate(dialog)
+        self.iterate(dialog)
