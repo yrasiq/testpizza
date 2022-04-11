@@ -1,7 +1,7 @@
 from aiounittest import AsyncTestCase
 from main import *
 from fastapi.testclient import TestClient
-from unittest import mock
+from aiounittest import mock
 
 
 client = TestClient(app)
