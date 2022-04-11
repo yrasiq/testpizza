@@ -32,7 +32,7 @@ class TestMain(unittest.TestCase):
     test_response = type('TestResponse', (object,), {'ok': True})
     url = f'/{cfg["TELEGRAM"]["BOT_TOKEN"]}/'
 
-    def iterate(self, dialog: list) -> None:
+    async def iterate(self, dialog: list) -> None:
         for i in dialog:
             self.request_data_example['message']['text'] = i['req']
             resp = client.post(self.url, json=self.request_data_example)
@@ -43,7 +43,7 @@ class TestMain(unittest.TestCase):
 
     @mock.patch('main.BackgroundTasks.add_task')
     @mock.patch('main.telegram_messenger')
-    def test_dialog(self, mock_tg_messenger, mock_add_task) -> None:
+    async def test_dialog(self, mock_tg_messenger, mock_add_task) -> None:
         mock_tg_messenger.return_value = self.test_response()
         mock_add_task.return_value = None
 
@@ -63,4 +63,4 @@ class TestMain(unittest.TestCase):
             {'req': 'отмена', 'res': 'Заказ отменен'},
         ]
 
-        self.iterate(dialog)
+        await self.iterate(dialog)
