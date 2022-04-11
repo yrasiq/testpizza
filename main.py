@@ -137,7 +137,7 @@ class Dialog:
 
     def __call__(self, client_text: str) -> None:
         self.last_call = datetime.now()
-        client_text = re.sub('[^a-z0-9\s]', '', client_text.lower())
+        client_text = re.sub('[^а-я0-9\s]', '', client_text.lower())
 
         if self.state != 'sleep' and client_text in ('cancel',):
             self.cancel_order()
