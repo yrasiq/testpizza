@@ -29,10 +29,11 @@ class TestMain(unittest.TestCase):
             'text': 'проверка проверка'
         }
     }
+    test_response = type('TestResponse', (object,), {'ok': True})
 
     @mock.patch('main.telegram_messenger')
     def test_telegram(self, mock_tg_messenger) -> None:
-        mock_tg_messenger.return_value = None
+        mock_tg_messenger.return_value = self.test_response
 
         resp = client.post(
             f'/{cfg["TELEGRAM"]["BOT_TOKEN"]}/',
