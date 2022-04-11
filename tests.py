@@ -31,7 +31,7 @@ class TestMain(unittest.TestCase):
     }
     test_response = type('TestResponse', (object,), {'ok': True})
 
-    @mock.patch('main.telegram_webhook.background_tasks.add_task')
+    @mock.patch('main.BackgroundTasks.add_task')
     @mock.patch('main.telegram_messenger')
     def test_telegram(self, mock_tg_messenger, mock_add_task) -> None:
         mock_tg_messenger.return_value = self.test_response
