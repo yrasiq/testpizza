@@ -1,6 +1,6 @@
-import uvicorn, configparser, re, requests, asyncio
+import uvicorn, configparser, re, requests, asyncio, json
 from fastapi import FastAPI, Request, BackgroundTasks
-from transitions.extensions.asyncio import Machine, State
+from transitions import Machine, State
 from pydantic import BaseModel
 from datetime import timedelta, datetime
 
@@ -21,6 +21,10 @@ def telegram_messenger(text: str, chat_id: int) -> requests.Response:
         f'http://api.telegram.org/bot{cfg["TELEGRAM"]["BOT_TOKEN"]}/sendMessage',
         params={'chat_id': chat_id, 'text': text}
     )
+
+def read(file: str) -> str:
+    with open(file) as f:
+        return f.read()
 
 
 class UnsupportedValue(Exception):
@@ -58,35 +62,13 @@ class CustomState(State):
 
 class Dialog:
 
+    accept_message = 'Спасибо за заказ'
+    cancel_message = 'Заказ отменен'
     states = [
         State(name='sleep'),
-        CustomState(
-            name='size',
-            text='Size?',
-            hint='Big or small',
-            possible_vals = [
-                {'value': 'big', 'interprirations': ['big',]},
-                {'value': 'small', 'interprirations': ['small',]}
-            ]
-        ),
-        CustomState(
-            name='payment_type',
-            text='Payment type?',
-            hint='Card or cash',
-            possible_vals = [
-                {'value': 'cash', 'interprirations': ['cash',]},
-                {'value': 'card', 'interprirations': ['card',]},
-            ]
-        ),
-        CustomState(
-            name='confirm',
-            text='Confirm?',
-            hint='Yes or no',
-            possible_vals = [
-                {'value': 'yes', 'interprirations': ['yes',]},
-                {'value': 'no', 'interprirations': ['no',]},
-            ]
-        )
+        CustomState(**json.loads(read('states/size.json'))),
+        CustomState(**json.loads(read('states/payment_type.json'))),
+        CustomState(**json.loads(read('states/confirm.json')))
     ]
 
     def __init__(self, chat_id: int, messenger: callable) -> None:
@@ -194,7 +176,7 @@ class Dialog:
 
     def set_confirm_text(self) -> None:
         state = self.machine.get_state('confirm')
-        state.text = f'Confirm {self.size} and {self.payment_type}'
+        state.text.format(self.size, self.payment_type)
 
     def send_message(self, *args, **kwargs) -> None:
         kwargs['chat_id'] = self.chat_id
@@ -323,7 +305,7 @@ async def telegram_webhook(data: TelegramHook, background_tasks: BackgroundTasks
         )
 
     dialog(data.message.text)
- 
+
     return {}
 
 
