@@ -9,7 +9,36 @@ client = TestClient(app)
 
 class TestMain(unittest.TestCase):
 
+    request_data_example = {
+        'update_id': 778806239,
+        'message': {
+            'message_id': 527,
+            'from': {
+                'id': 450566440,
+                'is_bot': False,
+                'first_name': 'Юрий',
+                'last_name': 'Андреевич',
+                'language_code': 'ru'
+            },
+            'chat': {
+                'id': 450566440,
+                'first_name': 'Юрий',
+                'last_name': 'Андреевич',
+                'type': 'private'
+            }, 'date': 1649671682,
+            'text': 'проверка проверка'
+        }
+    }
+
     @mock.patch('main.telegram_messenger')
-    def test_all(self, mock_tg_messenger) -> None:
+    def test_telegram(self, mock_tg_messenger) -> None:
         mock_tg_messenger.return_value = None
-        assert True
+
+        resp = client.post(
+            f'/{cfg["TELEGRAM"]["BOT_TOKEN"]}/',
+            json=self.request_data_example
+        )
+        self.assertEqual(
+            resp,
+            {'bot_text', 'Какую вы хотите пиццу?  Большую или маленькую?'}
+        )
