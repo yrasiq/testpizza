@@ -9,30 +9,28 @@ client = TestClient(app)
 
 class TestMain(unittest.TestCase):
 
-
-    def setUp(self) -> None:
-        self.request_data_example = {
-            'update_id': 778806239,
-            'message': {
-                'message_id': 527,
-                'from': {
-                    'id': 450566440,
-                    'is_bot': False,
-                    'first_name': 'Юрий',
-                    'last_name': 'Андреевич',
-                    'language_code': 'ru'
-                },
-                'chat': {
-                    'id': 450566440,
-                    'first_name': 'Юрий',
-                    'last_name': 'Андреевич',
-                    'type': 'private'
-                }, 'date': 1649671682,
-                'text': 'проверка проверка'
-            }
+    request_data_example = {
+        'update_id': 778806239,
+        'message': {
+            'message_id': 527,
+            'from': {
+                'id': 450566440,
+                'is_bot': False,
+                'first_name': 'Юрий',
+                'last_name': 'Андреевич',
+                'language_code': 'ru'
+            },
+            'chat': {
+                'id': 450566440,
+                'first_name': 'Юрий',
+                'last_name': 'Андреевич',
+                'type': 'private'
+            }, 'date': 1649671682,
+            'text': 'проверка проверка'
         }
-        self.test_response = type('TestResponse', (object,), {'ok': True})
-        self.url = f'/{cfg["TELEGRAM"]["BOT_TOKEN"]}/'
+    }
+    test_response = type('TestResponse', (object,), {'ok': True})
+    url = f'/{cfg["TELEGRAM"]["BOT_TOKEN"]}/'
 
     async def iterate(self, dialog: list) -> None:
         for i in dialog:
