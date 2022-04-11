@@ -34,10 +34,10 @@ class TestMain(unittest.TestCase):
         self.test_response = type('TestResponse', (object,), {'ok': True})
         self.url = f'/{cfg["TELEGRAM"]["BOT_TOKEN"]}/'
 
-    async def iterate(self, dialog: list) -> None:
+    def iterate(self, dialog: list) -> None:
         for i in dialog:
             self.request_data_example['message']['text'] = req_text = i['req']
-            resp = await client.post(self.url, json=self.request_data_example)
+            resp = client.post(self.url, json=self.request_data_example)
             self.assertEqual(
                 resp.json(),
                 {'bot_text': i['res']}
@@ -45,7 +45,7 @@ class TestMain(unittest.TestCase):
 
     @mock.patch('main.BackgroundTasks.add_task')
     @mock.patch('main.telegram_messenger')
-    async def test_dialog(self, mock_tg_messenger, mock_add_task) -> None:
+    def test_dialog(self, mock_tg_messenger, mock_add_task) -> None:
         mock_tg_messenger.return_value = self.test_response()
         mock_add_task.return_value = None
 
@@ -65,4 +65,4 @@ class TestMain(unittest.TestCase):
             {'req': 'отмена', 'res': 'Заказ отменен'},
         ]
 
-        await self.iterate(dialog)
+        self.iterate(dialog)
