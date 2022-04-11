@@ -34,10 +34,10 @@ class TestMain(unittest.TestCase):
         self.test_response = type('TestResponse', (object,), {'ok': True})
         self.url = f'/{cfg["TELEGRAM"]["BOT_TOKEN"]}/'
 
-    def iterate(self, dialog: list) -> None:
+    async def iterate(self, dialog: list) -> None:
         for i in dialog:
             self.request_data_example['message']['text'] = req_text = i['req']
-            resp = client.post(self.url, json=self.request_data_example)
+            resp = await client.post(self.url, json=self.request_data_example)
             self.assertEqual(
                 resp.json(),
                 {'bot_text': i['res']}
