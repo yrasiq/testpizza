@@ -1,4 +1,4 @@
-import unittest
+from aiounittest import AsyncTestCase
 from main import *
 from fastapi.testclient import TestClient
 from unittest import mock
@@ -7,7 +7,7 @@ from unittest import mock
 client = TestClient(app)
 
 
-class TestMain(unittest.TestCase):
+class TestMain(AsyncTestCase):
 
     request_data_example = {
         'update_id': 778806239,
@@ -63,4 +63,4 @@ class TestMain(unittest.TestCase):
             {'req': 'отмена', 'res': 'Заказ отменен'},
         ]
 
-        self.iterate(dialog)
+        await self.iterate(dialog)
